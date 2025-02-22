@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subir Archivos y Enviar Mensajes</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --background: #0f172a;
+            --surface: #1e293b;
+            --surface-lighter: #2a3649;
+            --text: #e2e8f0;
+            --text-secondary: #94a3b8;
+            --verified: #22c55e;
+            --danger: #ef4444;
+            --danger-hover: #dc2626;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--background);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 2rem;
+            background: linear-gradient(135deg, var(--background) 0%, #1a237e 100%);
+        }
+
+        .container {
+            background: var(--surface);
+            padding: 2.5rem;
+            border-radius: 1.5rem;
+            max-width: 800px;
+            margin: 0 auto;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 2.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .welcome-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .welcome-wrapper h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .welcome-wrapper span {
+            color: var(--primary);
+        }
+
+        .verified-badge {
+            color: var(--verified);
+            font-size: 1.25rem;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.8; }
+            50% { opacity: 1; }
+            100% { opacity: 0.8; }
+        }
+
+        .section {
+            background: var(--surface-lighter);
+            padding: 2rem;
+            border-radius: 1rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .section:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px -4px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: var(--text);
+        }
+
+        h1 i {
+            color: var(--primary);
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            width: 100%;
+            height: 160px;
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+            border-radius: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .file-input-wrapper:hover {
+            border-color: var(--primary);
+            background: rgba(99, 102, 241, 0.1);
+        }
+
+        .file-input-wrapper input[type="file"] {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .file-input-content {
+            text-align: center;
+            padding: 1rem;
+        }
+
+        .file-input-content i {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .file-input-content p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 140px;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 1rem;
+            color: var(--text);
+            font-size: 0.95rem;
+            font-family: 'Poppins', sans-serif;
+            resize: vertical;
+            transition: all 0.3s ease;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        textarea::placeholder {
+            color: var(--text-secondary);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        button {
+            width: 100%;
+            padding: 1rem;
+            border: none;
+            border-radius: 1rem;
+            background: var(--primary);
+            color: white;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px -10px var(--primary);
+        }
+
+        .btn-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.95rem;
+            margin-top: 1rem;
+            padding: 0.5rem 0;
+            transition: all 0.3s ease;
+        }
+
+        .btn-link:hover {
+            color: var(--primary);
+            transform: translateX(4px);
+        }
+
+        .logout-btn {
+            background: transparent;
+            color: var(--danger);
+            border: 1px solid var(--danger);
+            padding: 0.75rem 1.25rem;
+            font-size: 0.95rem;
+            border-radius: 0.75rem;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: var(--danger);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px -4px rgba(239, 68, 68, 0.25);
+        }
+
+        @media (max-width: 640px) {
+            body {
+                padding: 1rem;
+            }
+
+            .container {
+                padding: 1.5rem;
+            }
+
+            .section {
+                padding: 1.25rem;
+            }
+
+            .header {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+            }
+
+            .logout-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="welcome-wrapper">
+                <h2>Hola, <span>{{ username }}</span></h2>
+                {% if verified %}
+                <i class="fas fa-check-circle verified-badge"></i>
+                {% endif %}
+            </div>
+            <a href="/logout" class="logout-btn">
+                <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+            </a>
+        </div>
+
+        <div class="section">
+            <h1>
+                <i class="fas fa-cloud-upload-alt"></i>
+                Subir Archivo
+            </h1>
+            <form action="/upload" method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                    <div class="file-input-wrapper">
+                        <input type="file" name="file" id="file" required>
+                        <div class="file-input-content">
+                            <i class="fas fa-file-upload"></i>
+                            <p>Arrastra tu archivo aquí o haz clic para seleccionar</p>
+                            <small>Tamaño máximo: 10MB</small>
+                        </div>
+                    </div>
+                </div>
+                <button type="submit">
+                    <i class="fas fa-upload"></i>
+                    Subir Archivo
+                </button>
+            </form>
+            <a href="/files" class="btn-link">
+                <i class="fas fa-folder-open"></i>
+                Ver Archivos Subidos
+            </a>
+        </div>
+
+        <div class="section">
+            <h1>
+                <i class="fas fa-comment-dots"></i>
+                Enviar Mensaje
+            </h1>
+            <form action="/send_message" method="post">
+                <div class="form-group">
+                    <textarea 
+                        name="message" 
+                        placeholder="Escribe tu mensaje aquí..." 
+                        required
+                    ></textarea>
+                </div>
+                <button type="submit">
+                    <i class="fas fa-paper-plane"></i>
+                    Enviar Mensaje
+                </button>
+            </form>
+            <a href="/messages" class="btn-link">
+                <i class="fas fa-comments"></i>
+                Ver Mensajes
+            </a>
+        </div>
+    </div>
+</body>
+</html>
